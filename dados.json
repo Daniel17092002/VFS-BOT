@@ -1,8 +1,11 @@
 {
-  "nome": "Josué Kabeya",
-  "passaporte": "N3141823",
-  "dataNascimento": "2005-04-01",
+  "primeiroNome": "Josué",
+  "apelido": "kabeya",
   "genero": "Male",
+  "dataNascimento": "01-04-2005",
   "nacionalidade": "Angola",
-  "telefone": "+244957517420"
+  "passaporte": "N3141823",
+  "dataDeValidadeDoPassaport": "05-10-2033",
+  "telefone": "+244957517420",
+  "gmail": "mpobadaniel@gmail.com"
 }
