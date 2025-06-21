@@ -2,9 +2,16 @@ require('dotenv').config();
 const puppeteer = require('puppeteer');
 const dados = require('./dados.json');
 const axios = require('axios');
+const TelegramBot = require('node-telegram-bot-api'); // ← Biblioteca para comando /start
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_ID = process.env.TELEGRAM_USER_ID;
+
+// ← Resposta automática ao comando /start no Telegram
+const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: true });
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(msg.chat.id, '🔍 A vaga ainda não foi encontrada. Por programador DANIEL MBIA');
+});
 
 async function sendTelegram(msg) {
   if (!TELEGRAM_TOKEN || !TELEGRAM_ID) return;
