@@ -2,12 +2,12 @@ require('dotenv').config();
 const puppeteer = require('puppeteer');
 const dados = require('./dados.json');
 const axios = require('axios');
-const TelegramBot = require('node-telegram-bot-api'); // ← Biblioteca para comando /start
+const TelegramBot = require('node-telegram-bot-api'); // Biblioteca para comando /start
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_ID = process.env.TELEGRAM_USER_ID;
 
-// ← Resposta automática ao comando /start no Telegram
+// Resposta automática ao comando /start no Telegram
 const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: true });
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, '🔍 A vaga ainda não foi encontrada. Por programador DANIEL MBIA');
@@ -22,6 +22,22 @@ async function sendTelegram(msg) {
 }
 
 (async () => {
+  // Controle de horário: só roda de sexta 5h até domingo 00h
+  const agora = new Date();
+  const dia = agora.getDay(); // 0=Domingo, 1=Segunda, ..., 5=Sexta, 6=Sábado
+  const hora = agora.getHours();
+
+  const dentroDoHorarioPermitido = (
+    (dia === 5 && hora >= 5) || // Sexta após 5h
+    (dia === 6) ||              // Sábado
+    (dia === 0 && hora === 0)   // Domingo meia-noite (hora 0)
+  );
+
+  if (!dentroDoHorarioPermitido) {
+    await sendTelegram('⏳ Fora do horário: o bot só roda de sexta 5h até domingo 00h.');
+    return; // Para a execução do bot fora do horário permitido
+  }
+
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox','--disable-setuid-sandbox']
